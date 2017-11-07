@@ -388,8 +388,6 @@ class PtPdb(pdb.Pdb):
             'python_code': PythonValidator()
         })
 
-        # Make sure not to start in Vi navigation mode.
-        self.python_input.key_bindings_manager.reset(self.cli)
         self.cli.buffers[DEFAULT_BUFFER].reset()
 
         def pre_run():
@@ -444,9 +442,7 @@ class PtPdb(pdb.Pdb):
         (Override the 'pdb' implementation. We call ptpython instead.)
         """
         print('')
-        ns = self.curframe.f_globals.copy()
-        ns.update(self.curframe_locals)
-        embed(globals=ns)
+        embed(globals=self.curframe.f_globals, locals=self.curframe.f_locals)
 
     def error(self, msg):
         """

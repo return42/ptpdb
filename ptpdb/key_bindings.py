@@ -32,11 +32,8 @@ def load_custom_pdb_key_bindings(ptpdb, registry):
         Eager, because we want to ignore CtrlX-CtrlE and other key bindings
         starting with CtrlX.
         """
-        vi_state = ptpdb.python_input.key_bindings_manager.get_vi_state(event.cli)
-
         if event.cli.current_buffer_name == DEFAULT_BUFFER:
             event.cli.focus('source_code')
-            vi_state.input_mode = InputMode.NAVIGATION
 
         elif event.cli.current_buffer_name == 'source_code' and not ptpdb.callstack_focussed:
             ptpdb.callstack_focussed = True
@@ -45,7 +42,6 @@ def load_custom_pdb_key_bindings(ptpdb, registry):
         else:
             ptpdb.callstack_focussed = False
             event.cli.focus(DEFAULT_BUFFER)
-            vi_state.input_mode = InputMode.INSERT
 
     @handle(' ', filter=source_code_has_focus)
     @handle('b', filter=source_code_has_focus)
@@ -93,11 +89,8 @@ def load_custom_pdb_key_bindings(ptpdb, registry):
     @handle(Keys.ControlC, filter=~HasFocus(DEFAULT_BUFFER))
     def _(event):
         " Focus prompt again, wherever we are. "
-        vi_state = ptpdb.python_input.key_bindings_manager.get_vi_state(event.cli)
-
         ptpdb.callstack_focussed = False
         event.cli.focus(DEFAULT_BUFFER)
-        vi_state.input_mode = InputMode.INSERT
 
     # Call stack key bindings.
 
